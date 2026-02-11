@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package devicecontrol;
+
+message Command {
+  string name = 1;
+  int32 value = 2;
+  string filename = 3;
+}
+
+message Response {
+  bool success = 1;
+  string message = 2;
+}
+
+message DataMessage {
+  string id = 1;
+  string filename = 2;
+  bytes data = 3;
+}
+
+message ListFilesRequest {
+
+}
+
+message FileInfo {
+  string id = 1;          // eindeutige ID (z. B. UUID oder hash)
+  string filename = 2;    // ursprünglicher Dateiname
+  int32 size = 3;         // Dateigröße in Bytes
+  string created_at = 4;  // Zeitstempel (ISO 8601)
+}
+
+message FileList {
+  repeated FileInfo files = 1;
+}
+
+service DeviceService {
+  rpc SendCommand(Command) returns (Response);
+  rpc SendData(DataMessage) returns (Response);
+  rpc ListFiles(ListFilesRequest) returns (FileList);
+}
