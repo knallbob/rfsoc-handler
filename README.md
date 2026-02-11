@@ -1,93 +1,93 @@
-# rfsoc-handler
+# RfSoC Interaction Handler
 
+Generic interface for interacting with the RfSoC.
 
+## API Calls
 
-## Getting started
+### `InteractionHandler(ip_address)`
+Creates an instance of the handler. Needs the IP address of the RfSoC to connect.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+**Parameters:**
+- `ip_address` *(str)* — IP address of the RfSoC.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+### `send_message(instruction, par)`
+Sends a command message with the given instruction and parameter.
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+**Parameters:**
+- `instruction` *(str)* — The instruction to be sent.  
+- `par` *(int)* — The parameter to send with the instruction.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.hrz.tu-chemnitz.de/hybrid_echo/Lab_Devices/rfsoc-handler.git
-git branch -M main
-git push -uf origin main
-```
+---
 
-## Integrate with your tools
+### `send_start()`
+Starts the streaming engines of the RfSoC.  
+Depending on the trigger setting it either:
+- starts sending and generates a trigger, or  
+- waits for an incoming trigger.
 
-* [Set up project integrations](https://gitlab.hrz.tu-chemnitz.de/hybrid_echo/Lab_Devices/rfsoc-handler/-/settings/integrations)
+---
 
-## Collaborate with your team
+### `send_stop()`
+Stops the streaming engines and the DACs.
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+---
 
-## Test and Deploy
+### `send_set_trigger_in()`
+Configures the RfSoC to **receive** a trigger.
 
-Use the built-in continuous integration in GitLab.
+---
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### `send_set_trigger_out()`
+Configures the RfSoC to **send out** a trigger.
 
-***
+---
 
-# Editing this README
+### `send_data(filepath)`
+Sends a signal file to the board and stores it in the database.  
+The filename will be used for saving the file on the RfSoC.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+**Parameters:**
+- `filepath` *(str)* — Path to the file that should be sent.
 
-## Suggestions for a good README
+---
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### `select_signal(channel_id, filename)`
+Selects the signal for a given channel from a filename.  
+The file must be uploaded to the RfSoC first. Otherwise, this will throw an error.
 
-## Name
-Choose a self-explaining name for your project.
+**Parameters:**
+- `channel_id` *(int)* — Channel ID to use (`0–7`).  
+- `filename` *(str)* — Name of the signal file to be loaded.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+---
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### `list_files()`
+Prints a list with all files that are uploaded. The location on the RfSoC and the 
+creation time is given.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### `delete_signal(filename)`
+Deletes the file from the database and from the drive.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+**Parameters:**
+- `filename` *(str)* — Name of the signal file to be deleted.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### `set_freq(frequency)`
+Sets the sampling frequency of the DACs. Due to clock divider issues some frequencies are
+not allowed but currently there is no sanity check (will be added in the future). The
+maximum frequency is 168.75hz (for now).
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+**Parameters:**
+- `frequency` *(int)* — The target frequency in Hz 
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### `set_sending_mode(mode)`
+Sets the sending mode of the RfSoC. Currently it can be toggled between sending a single
+transmission and stream out periodically.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**Parameters:**
+- `mode` *(int)* — Allows changing between two modes for now: 
+                    0 -- Stream Mode
+                    1 -- Single Transmission mode

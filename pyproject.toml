@@ -1,7 +1,16 @@
 [project]
-name = "rfsoc-handler"
-version = "0.1.0"
-description = "Add your description here"
+name = "rpc_rfsoc_handler"
+version = "1.1.2"
+description = "A pip-installable handler for the RfSoC"
 readme = "README.md"
+authors = [
+    { name = "knallbob", email = "pascal.stoever@protonmail.com" }
+]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "grpcio-tools>=1.78.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.30,<0.10.0"]
+build-backend = "uv_build"
