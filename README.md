@@ -7,6 +7,9 @@ Generic interface for interacting with the RfSoC.
 ### `InteractionHandler(ip_address)`
 Creates an instance of the handler. Needs the IP address of the RfSoC to connect.
 
+### `SerialInteractionHandler(port, bautrate, timeout)`
+Creates an instance of the handler but for serial communication via pyserial. The port name is needed, everything is initialized with the values from the RfSoC and shouldn't be changed unless you changed settings on the RfSoC.
+
 **Parameters:**
 - `ip_address` *(str)* — IP address of the RfSoC.
 
