@@ -1,6 +1,6 @@
 [project]
 name = "rpc_rfsoc_handler"
-version = "1.1.4"
+version = "1.1.5"
 description = "A pip-installable handler for the RfSoC"
 readme = "README.md"
 license='MIT'

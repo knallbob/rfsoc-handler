@@ -1,3 +1,3 @@
-from .interaction_handler import InteractionHandler
+from .interaction_handler import InteractionHandler, SerialInteractionHandler
 
-__all__ = ["InteractionHandler"]
+__all__ = ["InteractionHandler", "SerialInteractionHandler"]
