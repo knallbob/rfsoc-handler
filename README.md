@@ -94,3 +94,10 @@ transmission and stream out periodically.
 - `mode` *(int)* — Allows changing between two modes for now: 
                     0 -- Stream Mode
                     1 -- Single Transmission mode
+
+### `set_scaling(scaling)`
+Sets the scaling of the signal. The scaling can be an arbitrary value between 0 and 1 with
+two digits maximum precision.
+
+**Parameters:**
+- `scaling` *(float)* — The scaling factor of the signal between 0 and 1 (two digits max)

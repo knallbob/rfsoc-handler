@@ -76,6 +76,11 @@ class InteractionHandler:
         response = self.stub.SendCommand(devicecontrol_pb2.Command(name="set_sample_freq", value=freq))
         print("Response:", response.success, response.message)
 
+    def set_scaling(self, scaling):
+        scal = int(scaling*100)
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="set_scaling_freq", value=scal))
+        print("Response:", response.success, response.message)
+
     def set_sending_mode(self, mode):
         response = self.stub.SendCommand(devicecontrol_pb2.Command(name="set_sending_mode", value=mode))
         print("Response:", response.success, response.message)
