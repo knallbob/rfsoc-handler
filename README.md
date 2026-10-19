@@ -78,13 +78,17 @@ Deletes the file from the database and from the drive.
 **Parameters:**
 - `filename` *(str)* — Name of the signal file to be deleted.
 
+---
+
 ### `set_freq(frequency)`
 Sets the sampling frequency of the DACs. Due to clock divider issues some frequencies are
 not allowed but currently there is no sanity check (will be added in the future). The
 maximum frequency is 168.75hz (for now).
 
 **Parameters:**
-- `frequency` *(int)* — The target frequency in Hz 
+- `frequency` *(int)* — The target frequency in Hz
+
+---
 
 ### `set_sending_mode(mode)`
 Sets the sending mode of the RfSoC. Currently it can be toggled between sending a single
@@ -95,9 +99,50 @@ transmission and stream out periodically.
                     0 -- Stream Mode
                     1 -- Single Transmission mode
 
+---
+
 ### `set_scaling(scaling)`
 Sets the scaling of the signal. The scaling can be an arbitrary value between 0 and 1 with
 two digits maximum precision.
 
 **Parameters:**
 - `scaling` *(float)* — The scaling factor of the signal between 0 and 1 (two digits max)
+
+---
+
+### `enable_LV()`
+Enables the 6V supply voltage. Voltage should already be supplied from
+a power supply before switching the relay with this command.
+
+---
+
+### `disable_LV()`
+Disables the 6V supply voltage.
+
+---
+
+### `enable_HV()`
+Enables the [5 -50V]V amplifier voltage. Voltage should already be supplied from
+a power supply before switching the relay with this command.
+
+---
+
+### `disable_HV()`
+Disables the supply of the power for the amplifier.
+
+---
+
+### `configure_amp()`
+Configurtes the STHV for linear amplification
+
+---
+
+### `activate_amp()`
+Activates the STHV after it is configured and power is supplied
+
+---
+
+### `deactivate_amp()`
+Deactivates the STHV.
+
+---

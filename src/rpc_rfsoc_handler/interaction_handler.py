@@ -78,76 +78,37 @@ class InteractionHandler:
 
     def set_scaling(self, scaling):
         scal = int(scaling*100)
-        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="set_scaling_freq", value=scal))
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="set_scaling", value=scal))
         print("Response:", response.success, response.message)
 
     def set_sending_mode(self, mode):
         response = self.stub.SendCommand(devicecontrol_pb2.Command(name="set_sending_mode", value=mode))
         print("Response:", response.success, response.message)
 
-class SerialInteractionHandler:
-    def __init__(self, port="/dev/ttyUSB1", baudrate=3000000, timeout=5.0):                                                                                                                    
-      try:                                                                                                                                                                                   
-          self.ser = serial.Serial(port, baudrate=baudrate, timeout=timeout)                                                                                                                 
-      except serial.SerialException as e:                                                                                                                                                    
-          raise ConnectionError(f"Could not open serial port {port}: {e}") from e                                                                                                                                                                                                                                                                                               
-      try:                                                                                                                                                                                   
-          resp = self._send({"method": "ping"})                                                                                                                                              
-          if not resp.get("success"):                                                                                                                                                        
-              raise ConnectionError(f"Handshake failed: {resp.get('message')}")                                                                                                              
-      except Exception as e:                                                                                                                                                                 
-          self.ser.close()                                                                                                                                                                   
-          raise ConnectionError(f"No response from device on {port}") from e 
-    
-    def _send(self, payload: dict, timeout=None) -> dict:
-        if timeout is not None:
-            self.ser.timeout = timeout
-        line = json.dumps(payload) + "\n"
-        self.ser.reset_input_buffer()
-        self.ser.write(line.encode())
-        self.ser.flush()
-        resp = self.ser.readline().decode().strip()
-        if timeout is not None:
-            self.ser.timeout = 5.0
-        print(f"[DEBUG] sent={list(payload.keys())} raw_resp={repr(resp)}")
-        return json.loads(resp)
+    def enable_LV(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="LV_on", value=0))
+        print("Response:", response.success, response.message)
 
-    def send_start(self):
-        return self._send({"method": "start_sending"})
+    def disable_LV(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="LV_off", value=0))
+        print("Response:", response.success, response.message)
 
-    def send_stop(self):
-        return self._send({"method": "stop_sending"})
+    def enable_HV(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="HV_on", value=0))
+        print("Response:", response.success, response.message)
 
-    def send_set_trigger_in(self):
-        return self._send({"method": "set_trigger_in"})
+    def disable_HV(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="HV_off", value=0))
+        print("Response:", response.success, response.message)
 
-    def send_set_trigger_out(self):
-        return self._send({"method": "set_trigger_out"})
+    def configure_amp(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="config_lin_amp", value=0))
+        print("Response:", response.success, response.message)
 
-    def set_freq(self, frequency):
-        return self._send({"method": "set_freq", "value": frequency})
+    def activate_amp(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="activate_lin_amp", value=0))
+        print("Response:", response.success, response.message)
 
-    def set_sending_mode(self, mode):
-        return self._send({"method": "set_sending_mode", "value": mode})
-
-    def list_files(self):
-        resp = self._send({"method": "list_files"})
-        return resp.get("files", [])
-
-    def select_signal(self, channel_id, filename):
-        return self._send({"method": "select_signal", "channel_id": channel_id, "filename": filename})
-
-    def delete_signal(self, filename):
-        return self._send({"method": "delete_signal", "filename": filename})
-
-    def send_data(self, filepath):
-        with open(filepath, "rb") as f:
-            raw = f.read()
-        data = base64.b64encode(raw).decode()
-        filename = filepath.split("/")[-1]
-        # timeout scales with file size: 10s base + 1s per 10KB
-        transfer_timeout = 10.0 + len(raw) / 10_000
-        return self._send({"method": "send_data", "filename": filename, "data": data}, timeout=transfer_timeout)
-
-    def close(self):
-        self.ser.close()
+    def deactivate_amp(self):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="deactivate_lin_amp", value=0))
+        print("Response:", response.success, response.message)
