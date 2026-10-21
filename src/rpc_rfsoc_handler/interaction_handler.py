@@ -105,8 +105,8 @@ class InteractionHandler:
         response = self.stub.SendCommand(devicecontrol_pb2.Command(name="config_lin_amp", value=0))
         print("Response:", response.success, response.message)
 
-    def activate_amp(self):
-        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="activate_lin_amp", value=0))
+    def activate_amp(self, db_selector = 0):
+        response = self.stub.SendCommand(devicecontrol_pb2.Command(name="activate_lin_amp", value=db_selector))
         print("Response:", response.success, response.message)
 
     def deactivate_amp(self):
